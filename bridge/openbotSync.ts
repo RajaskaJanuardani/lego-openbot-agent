@@ -245,13 +245,15 @@ export async function startOpenBotSync(
         }
       }
 
-      // Remove agents that were previously synced from OpenBot DB but deleted in OpenBot Desktop
+      // Remove ANY agent in store that no longer exists in OpenBot Desktop (projection_agents)
       const activeDbSlugs = new Set(Array.from(agentsByRawId.values()).map((a) => a.slug));
-      for (const prevSlug of Array.from(syncedDbSlugs)) {
-        if (!activeDbSlugs.has(prevSlug)) {
-          syncedDbSlugs.delete(prevSlug);
-          if (store.remove(prevSlug)) {
-            console.log(`[openbot-sync] Agent dihapus di OpenBot -> keluar dari rumah: ${prevSlug}`);
+      for (const rec of store.list()) {
+        if (!activeDbSlugs.has(rec.agentId)) {
+          syncedDbSlugs.delete(rec.agentId);
+          if (store.remove(rec.agentId)) {
+            console.log(
+              `[openbot-sync] Agent dihapus di OpenBot -> otomatis dihapus dari map: ${rec.agentId}`
+            );
           }
         }
       }
