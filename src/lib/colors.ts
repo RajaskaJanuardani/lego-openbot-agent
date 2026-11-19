@@ -1,0 +1,93 @@
+export const LEGO_COLORS = {
+  pinkExterior: '#F07DA8',
+  pinkLight: '#F9C6D9',
+  magentaTrim: '#C21878',
+  darkBlueTrim: '#1B3E7A',
+  mintWall: '#8FD6BE',
+  mintLight: '#C2ECE0',
+  mintTile: '#9BE0CA',
+  creamWall: '#F6EBD4',
+  creamTile: '#EFE2C3',
+  darkBrownBrick: '#5C3A24',
+  brownFloor: '#7B4B2A',
+  brownWood: '#8D5524',
+  darkWood: '#4E2E18',
+  terracotta: '#C85A32',
+  white: '#F7F7F5',
+  offWhite: '#ECEAE2',
+  silver: '#C0C6CC',
+  black: '#202226',
+  darkGray: '#4A4E54',
+  lightGray: '#B4B9BF',
+  yellow: '#F6C915',
+  warmYellow: '#FFD95A',
+  red: '#D92B2B',
+  orange: '#F07818',
+  blue: '#1E70C1',
+  lightBlue: '#5BB6E5',
+  royalBlue: '#2554A8',
+  navyBlue: '#1A3461',
+  green: '#2E9E47',
+  brightGreen: '#52BA4E',
+  darkGreen: '#1E6B34',
+  limeGreen: '#9ACD32',
+  sand: '#E8D2A0',
+  sandDark: '#D4B982',
+  seaBlue: '#2FA6D6',
+  seaDeep: '#1978A8',
+  foamWhite: '#E8F7FC',
+  rattan: '#C99652',
+  pinkCushion: '#F46FA4',
+  gold: '#E6A82E',
+  khaki: '#C4AF7E',
+  denim: '#3B6496',
+  minifigYellow: '#FAD21B',
+  turquoise: '#2DB5A8',
+  purple: '#7E4BB8',
+} as const;
+
+export type LegoColorKey = keyof typeof LEGO_COLORS;
+
+export interface LegoPaletteSwatch {
+  name: string;
+  hex: string;
+}
+
+/** 24 official-style LEGO ABS color swatches for Build Mode & Character Creator */
+export const LEGO_PALETTE_24: LegoPaletteSwatch[] = [
+  { name: 'Putih', hex: '#F7F7F5' },
+  { name: 'Krem', hex: '#F6EBD4' },
+  { name: 'Pasir', hex: '#E8D2A0' },
+  { name: 'Abu Muda', hex: '#B4B9BF' },
+  { name: 'Abu Tua', hex: '#4A4E54' },
+  { name: 'Hitam', hex: '#202226' },
+  { name: 'Merah', hex: '#D92B2B' },
+  { name: 'Terakota', hex: '#C85A32' },
+  { name: 'Oranye', hex: '#F07818' },
+  { name: 'Kuning', hex: '#F6C915' },
+  { name: 'Kuning Muda', hex: '#FFD95A' },
+  { name: 'Lime', hex: '#9ACD32' },
+  { name: 'Hijau Cerah', hex: '#52BA4E' },
+  { name: 'Hijau Daun', hex: '#2E9E47' },
+  { name: 'Hijau Tua', hex: '#1E6B34' },
+  { name: 'Mint', hex: '#8FD6BE' },
+  { name: 'Toska', hex: '#2DB5A8' },
+  { name: 'Biru Langit', hex: '#5BB6E5' },
+  { name: 'Biru LEGO', hex: '#1E70C1' },
+  { name: 'Biru Tua', hex: '#1B3E7A' },
+  { name: 'Ungu', hex: '#7E4BB8' },
+  { name: 'Magenta', hex: '#C21878' },
+  { name: 'Pink Tropis', hex: '#F07DA8' },
+  { name: 'Cokelat Kayu', hex: '#8D5524' },
+];
+
+/** LEGO classic yellow + 6 natural skin tones (light to deep) */
+export const MINIFIG_SKIN_TONES: LegoPaletteSwatch[] = [
+  { name: 'Kuning LEGO', hex: '#FAD21B' },
+  { name: 'Terang Hangat', hex: '#FCE0C8' },
+  { name: 'Kuning Langsat', hex: '#F2C69C' },
+  { name: 'Sawo Muda', hex: '#DDA272' },
+  { name: 'Sawo Matang', hex: '#B97A4E' },
+  { name: 'Cokelat Hangat', hex: '#8B5533' },
+  { name: 'Cokelat Gelap', hex: '#57331E' },
+];
