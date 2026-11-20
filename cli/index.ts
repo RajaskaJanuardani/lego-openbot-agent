@@ -19,6 +19,11 @@ import {
   startBackgroundDaemon,
   stopBackgroundDaemon,
 } from './tray.js';
+import {
+  checkForUpdate,
+  runGlobalSelfUpdate,
+  type UpdateCheckResult,
+} from './updater.js';
 
 // ANSI color palette matching LEGO OpenBot branding
 const C = {
@@ -69,23 +74,23 @@ function readPackageVersion(): string {
 }
 
 /**
- * Renders the iconic LEGO OpenBot mascot logo (2 top studs + glossy pink-violet-indigo
- * LEGO brick head + twin glowing white vertical pill eyes) next to the CLI title.
+ * Renders the iconic LEGO OpenBot mascot logo (2 flat LEGO studs + solid pink-violet-indigo
+ * rounded brick head + twin glowing white vertical pill eyes + red 3D badge).
  */
 function printBanner(version: string): void {
   const logo = [
-    `   ${C.stud}▄██▄  ▄██▄${C.reset}   `,
+    `    ${C.stud}███  ███${C.reset}    `,
     `  ${C.pink}▄██████████▄${C.reset}  `,
-    `  ${C.violet}██ ${C.eye}█${C.violet}    ${C.eye}█${C.violet} ██${C.reset}  `,
-    `  ${C.violet}██ ${C.eye}█${C.violet}    ${C.eye}█${C.violet} ██${C.reset}  `,
-    `  ${C.indigo}▀████████${C.redBadge}3D${C.reset}  `,
+    `  ${C.violet}████${C.eye}█${C.violet}██${C.eye}█${C.violet}████${C.reset}  `,
+    `  ${C.indigo}████${C.eye}█${C.indigo}██${C.eye}█${C.indigo}████${C.reset}  `,
+    `  ${C.indigo}▀█████████${C.redBadge}3D${C.reset}  `,
   ];
 
   console.log('');
   console.log(`${logo[0]} ${C.pink}${C.bold}LEGO OpenBot Agent${C.reset}  ${C.dim}v${version}${C.reset}`);
   console.log(`${logo[1]} ${C.dim}Markas 3D Interaktif Real-Time untuk OpenBot Desktop${C.reset}`);
   console.log(`${logo[2]} ${C.violet}────────────────────────────────────────────────────${C.reset}`);
-  console.log(`${logo[3]} ${C.dim}Command:${C.reset} ${C.cyan}openbot-lego${C.reset}  ${C.dim}·  Tray / Auto-Start Ready${C.reset}`);
+  console.log(`${logo[3]} ${C.dim}Command:${C.reset} ${C.cyan}openbot-lego${C.reset}  ${C.dim}·  Tray / Auto-Start / Auto-Update${C.reset}`);
   console.log(`${logo[4]}`);
   console.log('');
 }
@@ -100,6 +105,7 @@ function printHelp(version: string): void {
   console.log(`    ${C.cyan}openbot-lego autostart on|off${C.reset}      Aktifkan/Matikan auto-jalan saat laptop hidup`);
   console.log(`    ${C.cyan}openbot-lego status${C.reset}                Lihat daftar agent OpenBot & status server`);
   console.log(`    ${C.cyan}openbot-lego doctor${C.reset}                Cek Node.js, openbot.db, & auto-start`);
+  console.log(`    ${C.cyan}openbot-lego update${C.reset}                Update otomatis ke versi terbaru di npm`);
   console.log(`    ${C.cyan}openbot-lego logs${C.reset}                  Tampilkan log server background`);
   console.log(`    ${C.cyan}openbot-lego reset${C.reset}                 Reset konfigurasi & cache lokal`);
   console.log('');
@@ -388,6 +394,65 @@ async function runStop(version: string): Promise<void> {
   }
 }
 
+function printUpdateNoticeBox(info: UpdateCheckResult, interactive: boolean): void {
+  if (!info.hasUpdate || !info.latestVersion) return;
+  const w = 56;
+  const l1 = `  ⬆ Update baru tersedia: v${info.currentVersion} → v${info.latestVersion}`;
+  const l2 = interactive
+    ? `  Tekan [U] untuk update otomatis sekarang, atau jalankan:`
+    : `  Jalankan untuk update otomatis:`;
+  const l3 = `  openbot-lego update`;
+  const pad = (s: string) => ' '.repeat(Math.max(1, w - s.length));
+
+  console.log(`  ${C.yellow}╭${'─'.repeat(w)}╮${C.reset}`);
+  console.log(
+    `  ${C.yellow}│${C.reset}  ${C.yellow}${C.bold}⬆ Update baru tersedia:${C.reset} ${C.dim}v${info.currentVersion}${C.reset} → ${C.green}${C.bold}v${info.latestVersion}${C.reset}${pad(l1)}${C.yellow}│${C.reset}`
+  );
+  console.log(`  ${C.yellow}│${C.reset}${C.dim}${l2}${C.reset}${pad(l2)}${C.yellow}│${C.reset}`);
+  console.log(`  ${C.yellow}│${C.reset}  ${C.cyan}${C.bold}openbot-lego update${C.reset}${pad(l3)}${C.yellow}│${C.reset}`);
+  console.log(`  ${C.yellow}╰${'─'.repeat(w)}╯${C.reset}`);
+  console.log('');
+}
+
+async function runUpdateCommand(version: string): Promise<void> {
+  printBanner(version);
+  console.log(`  ${C.dim}Memeriksa versi terbaru di npmjs.com...${C.reset}`);
+  const check = await checkForUpdate(version, 5000);
+
+  if (!check.latestVersion) {
+    console.log(`  ${C.yellow}⚠${C.reset} Tidak dapat menghubungi npm registry. Cek koneksi internet Anda.\n`);
+    return;
+  }
+
+  if (!check.hasUpdate) {
+    console.log(
+      `  ${C.green}✔${C.reset} Kamu sudah memakai versi terbaru (${C.bold}v${version}${C.reset})!\n`
+    );
+    return;
+  }
+
+  console.log(
+    `  ${C.cyan}➜${C.reset} Mengupdate ${C.dim}v${version}${C.reset} → ${C.green}${C.bold}v${check.latestVersion}${C.reset}...\n`
+  );
+
+  // Stop any running background daemon before overwriting global package
+  await stopBackgroundDaemon();
+
+  const ok = runGlobalSelfUpdate();
+  console.log('');
+  if (ok) {
+    console.log(
+      `  ${C.green}✔${C.reset} ${C.bold}Berhasil update ke openbot-lego v${check.latestVersion}!${C.reset}`
+    );
+    console.log(`  ${C.dim}Jalankan ${C.cyan}openbot-lego${C.reset}${C.dim} untuk mulai memakai versi baru.${C.reset}\n`);
+  } else {
+    console.log(
+      `  ${C.red}✖${C.reset} Update gagal. Coba jalankan manual: ${C.cyan}npm install -g openbot-lego@latest${C.reset}\n`
+    );
+    process.exit(1);
+  }
+}
+
 async function runDaemonChild(port: number, host: string): Promise<void> {
   const indexHtmlPath = join(DIST_DIR, 'index.html');
   if (!existsSync(indexHtmlPath)) {
@@ -545,10 +610,23 @@ async function runStart(
     openBrowser(url);
   }
 
+  let availableUpdate: UpdateCheckResult | null = null;
+
   console.log(
     `  ${C.dim}Pintasan:${C.reset}  ${C.yellow}[H]${C.reset} Hide to Tray (Background)  ${C.yellow}[A]${C.reset} Toggle Auto-Start  ${C.yellow}[O]${C.reset} Buka Web  ${C.yellow}[Q]${C.reset} Keluar`
   );
   console.log('');
+
+  // Non-blocking background update check against npm registry
+  void checkForUpdate(version).then((res) => {
+    if (!closing && res.hasUpdate && res.latestVersion) {
+      availableUpdate = res;
+      printUpdateNoticeBox(res, Boolean(process.stdin.isTTY));
+      console.log(
+        `  ${C.dim}Pintasan:${C.reset}  ${C.green}${C.bold}[U] Update v${res.latestVersion}${C.reset}  ${C.yellow}[H]${C.reset} Hide to Tray  ${C.yellow}[A]${C.reset} Auto-Start  ${C.yellow}[O]${C.reset} Buka Web  ${C.yellow}[Q]${C.reset} Keluar\n`
+      );
+    }
+  });
 
   let closing = false;
   const cleanupStdin = () => {
@@ -574,6 +652,38 @@ async function runStart(
       process.exit(0);
     }
     setTimeout(() => process.exit(0), 1200).unref();
+  };
+
+  const triggerInteractiveUpdate = async () => {
+    if (closing) return;
+    closing = true;
+    cleanupStdin();
+    const targetVer = availableUpdate?.latestVersion ?? 'latest';
+    console.log(
+      `\n  ${C.cyan}➜${C.reset} Menghentikan server & mengupdate ke ${C.green}${C.bold}v${targetVer}${C.reset}...\n`
+    );
+    runtime.stop();
+    await new Promise<void>((resolveClose) => {
+      if (server) {
+        server.close(() => resolveClose());
+        setTimeout(resolveClose, 500).unref();
+      } else {
+        resolveClose();
+      }
+    });
+    const ok = runGlobalSelfUpdate();
+    console.log('');
+    if (ok) {
+      console.log(
+        `  ${C.green}✔${C.reset} ${C.bold}Update berhasil!${C.reset} Jalankan ${C.cyan}openbot-lego${C.reset} lagi untuk memakai versi terbaru.\n`
+      );
+      process.exit(0);
+    } else {
+      console.log(
+        `  ${C.red}✖${C.reset} Update gagal. Coba jalankan manual: ${C.cyan}npm install -g openbot-lego@latest${C.reset}\n`
+      );
+      process.exit(1);
+    }
   };
 
   const hideToTray = async () => {
@@ -614,6 +724,12 @@ async function runStart(
       process.stdin.on('data', (key: string) => {
         if (key === '\u0003' || key === 'q' || key === 'Q') {
           shutdown();
+        } else if (key === 'u' || key === 'U') {
+          if (availableUpdate?.hasUpdate) {
+            void triggerInteractiveUpdate();
+          } else {
+            console.log(`  ${C.green}✔${C.reset} Kamu sudah memakai versi terbaru (${C.dim}v${version}${C.reset}).`);
+          }
         } else if (key === 'h' || key === 'H') {
           void hideToTray();
         } else if (key === 'o' || key === 'O') {
@@ -677,6 +793,10 @@ async function main() {
   }
   if (opts.command === 'stop') {
     await runStop(version);
+    return;
+  }
+  if (opts.command === 'update' || opts.command === 'upgrade') {
+    await runUpdateCommand(version);
     return;
   }
   if (opts.command === 'background' || opts.command === 'tray' || opts.daemon) {

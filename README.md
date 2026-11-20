@@ -46,13 +46,15 @@ openbot-lego autostart on        # Otomatis jalan di background & Tray saat lapt
 openbot-lego autostart off       # Matikan auto-start saat laptop hidup
 openbot-lego status              # Lihat daftar agent OpenBot & status server background
 openbot-lego doctor              # Cek versi Node.js, openbot.db, & status auto-start
+openbot-lego update              # Update otomatis ke versi terbaru dari npm
 openbot-lego logs                # Lihat log server background
 openbot-lego reset               # Reset konfigurasi & cache lokal (~/.openbot-lego)
 openbot-lego --port 8080         # Jalankan di port custom
 openbot-lego --no-open           # Jalankan tanpa membuka browser otomatis
 ```
 
-Saat berjalan di terminal (`openbot-lego`), kamu juga bisa langsung menekan pintasan keyboard:
+Saat berjalan di terminal (`openbot-lego`), jika ada versi baru di npm akan muncul notifikasi otomatis dan kamu bisa langsung tekan pintasan keyboard:
+- **`[U]`** → **Update otomatis** ke versi terbaru (muncul saat ada update baru)
 - **`[H]`** → **Hide to Tray (Background)** (memindahkan server ke background + ikon System Tray agar terminal bisa ditutup)
 - **`[A]`** → **Toggle Auto-Start** saat laptop hidup (ON/OFF)
 - **`[O]`** → Buka ulang browser
