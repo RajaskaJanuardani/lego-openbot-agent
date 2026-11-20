@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="128" height="128" role="img" aria-label="LEGO OpenBot Agent Logo">
+  <defs>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F472B6" />
+      <stop offset="52%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+    <linearGradient id="studGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FBCFE8" />
+      <stop offset="48%" stop-color="#E879F9" />
+      <stop offset="100%" stop-color="#7E22CE" />
+    </linearGradient>
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Soft outer drop background -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="#0F172A" />
+
+  <!-- Twin LEGO top studs -->
+  <rect x="16" y="9" width="12" height="8" rx="3" fill="url(#studGrad)" />
+  <rect x="17.8" y="10.2" width="8.4" height="2" rx="1" fill="#FFFFFF" fill-opacity="0.55" />
+  <rect x="36" y="9" width="12" height="8" rx="3" fill="url(#studGrad)" />
+  <rect x="37.8" y="10.2" width="8.4" height="2" rx="1" fill="#FFFFFF" fill-opacity="0.55" />
+
+  <!-- Main LEGO OpenBot brick head -->
+  <rect x="10" y="15" width="44" height="40" rx="12" fill="url(#bodyGrad)" />
+  <!-- Bottom 3D LEGO bevel shadow -->
+  <path d="M10 45 C10 51.2 14.8 55 21 55 L43 55 C49.2 55 54 51.2 54 45 L54 48 C54 52.4 50.4 55 46 55 L18 55 C13.6 55 10 52.4 10 48 Z" fill="#1E1B4B" fill-opacity="0.38" />
+  <!-- Top specular gloss -->
+  <rect x="14" y="17.5" width="36" height="8" rx="4" fill="url(#glossGrad)" />
+
+  <!-- Twin glowing vertical OpenBot pill eyes -->
+  <rect x="21.5" y="27.5" width="6.8" height="14" rx="3.4" fill="#1E1B4B" fill-opacity="0.25" transform="translate(0, 1.5)" />
+  <rect x="35.7" y="27.5" width="6.8" height="14" rx="3.4" fill="#1E1B4B" fill-opacity="0.25" transform="translate(0, 1.5)" />
+  <rect x="21.5" y="27" width="6.8" height="14" rx="3.4" fill="#FFFFFF" />
+  <rect x="35.7" y="27" width="6.8" height="14" rx="3.4" fill="#FFFFFF" />
+  <circle cx="24" cy="30.8" r="1.3" fill="#F9A8D4" fill-opacity="0.7" />
+  <circle cx="38.2" cy="30.8" r="1.3" fill="#F9A8D4" fill-opacity="0.7" />
+</svg>
