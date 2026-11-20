@@ -396,12 +396,12 @@ async function runStop(version: string): Promise<void> {
 
 function printUpdateNoticeBox(info: UpdateCheckResult, interactive: boolean): void {
   if (!info.hasUpdate || !info.latestVersion) return;
-  const w = 56;
   const l1 = `  ⬆ Update baru tersedia: v${info.currentVersion} → v${info.latestVersion}`;
   const l2 = interactive
-    ? `  Tekan [U] untuk update otomatis sekarang, atau jalankan:`
+    ? `  Tekan [U] untuk update otomatis, atau jalankan:`
     : `  Jalankan untuk update otomatis:`;
   const l3 = `  openbot-lego update`;
+  const w = Math.max(56, l1.length + 2, l2.length + 2, l3.length + 2);
   const pad = (s: string) => ' '.repeat(Math.max(1, w - s.length));
 
   console.log(`  ${C.yellow}╭${'─'.repeat(w)}╮${C.reset}`);
