@@ -2,6 +2,11 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { streamSSE } from 'hono/streaming';
 import { z } from 'zod';
+import {
+  disableAutoStart,
+  enableAutoStart,
+  getAutoStartStatus,
+} from './autostart.js';
 import { BridgeConfigStore, getDefaultOpenBotDbPath } from './config.js';
 import {
   startOpenBotSync,
@@ -13,6 +18,7 @@ import { AgentBridgeStore } from './store.js';
 export interface BridgeRuntimeOptions {
   mode: 'embedded' | 'standalone' | 'cli';
   allowedOrigin?: string;
+  onShutdown?: () => void;
 }
 
 export interface BridgeRuntime {
@@ -48,6 +54,7 @@ const ConfigPatchSchema = z.object({
   autoSyncEnabled: z.boolean().optional(),
   openbotDbPath: z.string().max(400).optional(),
   regenerateToken: z.boolean().optional(),
+  autoStartEnabled: z.boolean().optional(),
 });
 
 const SimulateSchema = z.object({
@@ -159,6 +166,7 @@ export function createBridgeRuntime(options: BridgeRuntimeOptions): BridgeRuntim
       openbotDbPath: cfg.openbotDbPath,
       defaultOpenBotDbPath: getDefaultOpenBotDbPath(),
       bridgeToken: cfg.bridgeToken,
+      autoStart: getAutoStartStatus(),
       diagnostics: openBotSync?.getDiagnostics() ?? null,
     });
   });
@@ -173,6 +181,13 @@ export function createBridgeRuntime(options: BridgeRuntimeOptions): BridgeRuntim
       return c.json({ error: 'Validation failed', details: parsed.error.issues }, 400);
     }
     const updated = configStore.update(parsed.data);
+    if (typeof parsed.data.autoStartEnabled === 'boolean') {
+      if (parsed.data.autoStartEnabled) {
+        enableAutoStart();
+      } else {
+        disableAutoStart();
+      }
+    }
     openBotSync?.reload();
     return c.json({
       mode: options.mode,
@@ -180,9 +195,21 @@ export function createBridgeRuntime(options: BridgeRuntimeOptions): BridgeRuntim
       openbotDbPath: updated.openbotDbPath,
       defaultOpenBotDbPath: getDefaultOpenBotDbPath(),
       bridgeToken: updated.bridgeToken,
+      autoStart: getAutoStartStatus(),
       diagnostics: openBotSync?.getDiagnostics() ?? null,
       agents: store.list(),
     });
+  });
+
+  app.post('/api/shutdown', (c) => {
+    if (!isLocalOrigin(c.req.header('origin'), c.req.header('host'))) {
+      return c.json({ error: 'Forbidden' }, 403);
+    }
+    if (options.onShutdown) {
+      setTimeout(() => options.onShutdown?.(), 80);
+      return c.json({ ok: true });
+    }
+    return c.json({ ok: false, error: 'Shutdown only supported in CLI mode' }, 400);
   });
 
   app.post('/api/sync-now', (c) => {

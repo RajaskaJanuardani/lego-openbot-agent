@@ -9,6 +9,7 @@ import {
   Database,
   Palette,
   Play,
+  Power,
   RefreshCw,
   RotateCcw,
   Settings2,
@@ -30,12 +31,20 @@ interface SyncDiagnostics {
   lastError: string | null;
 }
 
+interface AutoStartInfo {
+  enabled: boolean;
+  supported: boolean;
+  platform: string;
+  targetPath: string;
+}
+
 interface BridgeConfigResponse {
   mode: 'embedded' | 'standalone' | 'cli';
   autoSyncEnabled: boolean;
   openbotDbPath: string;
   defaultOpenBotDbPath: string;
   bridgeToken: string;
+  autoStart?: AutoStartInfo | null;
   diagnostics: SyncDiagnostics | null;
 }
 
@@ -106,6 +115,7 @@ export const OpenBotSettingsModal: React.FC = () => {
     autoSyncEnabled?: boolean;
     openbotDbPath?: string;
     regenerateToken?: boolean;
+    autoStartEnabled?: boolean;
   }) => {
     setSaving(true);
     try {
@@ -344,6 +354,44 @@ export const OpenBotSettingsModal: React.FC = () => {
                 </p>
               )}
             </div>
+
+            {/* Auto-Start on Laptop Boot Toggle */}
+            {config?.autoStart?.supported && (
+              <div className="flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
+                <div className="flex items-center gap-2">
+                  <Power className="h-4 w-4 text-fuchsia-600" />
+                  <div>
+                    <h4 className="text-xs font-extrabold text-slate-800">
+                      Jalankan Otomatis Saat Laptop Hidup
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      Otomatis aktif di background & System Tray saat login (tanpa jendela terminal).
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() =>
+                    void handleSaveConfig({
+                      autoStartEnabled: !config.autoStart?.enabled,
+                    })
+                  }
+                  className={[
+                    'relative h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors disabled:opacity-50',
+                    config.autoStart.enabled ? 'bg-fuchsia-600' : 'bg-slate-300',
+                  ].join(' ')}
+                  aria-label="Toggle Auto-Start saat laptop hidup"
+                >
+                  <span
+                    className={[
+                      'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
+                      config.autoStart.enabled ? 'left-5' : 'left-0.5',
+                    ].join(' ')}
+                  />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Section 2: Active Agents Auto-Spawned on Map */}

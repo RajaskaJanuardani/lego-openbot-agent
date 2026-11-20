@@ -38,14 +38,25 @@ npx openbot-lego
 ## Perintah CLI
 
 ```bash
-openbot-lego                  # Jalankan Markas 3D & otomatis buka browser
-openbot-lego --port 8080      # Jalankan di port custom
-openbot-lego --no-open        # Jalankan tanpa membuka browser otomatis
-openbot-lego status           # Lihat daftar agent OpenBot & status (Working/Idle) di terminal
-openbot-lego doctor           # Cek versi Node.js & koneksi openbot.db
-openbot-lego reset            # Reset konfigurasi & cache lokal (~/.openbot-lego)
-openbot-lego --help           # Tampilkan bantuan lengkap
+openbot-lego                     # Jalankan Markas 3D & otomatis buka browser
+openbot-lego background          # Jalankan diam-diam di background + Hide to Tray
+openbot-lego tray                # Alias untuk background + ikon System Tray
+openbot-lego stop                # Hentikan server background & tutup ikon Tray
+openbot-lego autostart on        # Otomatis jalan di background & Tray saat laptop hidup
+openbot-lego autostart off       # Matikan auto-start saat laptop hidup
+openbot-lego status              # Lihat daftar agent OpenBot & status server background
+openbot-lego doctor              # Cek versi Node.js, openbot.db, & status auto-start
+openbot-lego logs                # Lihat log server background
+openbot-lego reset               # Reset konfigurasi & cache lokal (~/.openbot-lego)
+openbot-lego --port 8080         # Jalankan di port custom
+openbot-lego --no-open           # Jalankan tanpa membuka browser otomatis
 ```
+
+Saat berjalan di terminal (`openbot-lego`), kamu juga bisa langsung menekan pintasan keyboard:
+- **`[H]`** → **Hide to Tray (Background)** (memindahkan server ke background + ikon System Tray agar terminal bisa ditutup)
+- **`[A]`** → **Toggle Auto-Start** saat laptop hidup (ON/OFF)
+- **`[O]`** → Buka ulang browser
+- **`[Q]`** / `Ctrl+C` → Hentikan server & keluar
 
 ---
 

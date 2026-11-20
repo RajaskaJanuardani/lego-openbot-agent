@@ -1,6 +1,6 @@
 {
   "name": "openbot-lego",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Interactive 3D LEGO Tropical House & real-time visual HQ for OpenBot Desktop AI agents",
   "license": "MIT",
   "type": "module",
