@@ -1,189 +1,248 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/logo.svg" width="88" height="88" alt="LEGO OpenBot Agent Logo" />
+<img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/logo.svg" width="92" height="92" alt="LEGO OpenBot Agent Logo" />
 
 # LEGO OpenBot Agent (`openbot-lego`)
 
-**An interactive 3D LEGO Tropical House and real-time visual headquarters for OpenBot Desktop AI agents.**
+**Turn your local OpenBot Desktop agents into a living 3D LEGO Tropical Headquarters.**
 
-Built procedurally with **React**, **TypeScript**, **Three.js (`@react-three/fiber` / `@react-three/drei`)**, **Hono**, and **Tailwind CSS** — with zero external `.glb`/`.gltf` model dependencies and zero-config OpenBot synchronization.
+Watch your AI agents walk downstairs to their workstations when they start thinking, typing away with live task badges, and unwind around the house & beachfront once they finish — all powered by procedural **Three.js** geometry and **zero-config** SQLite auto-sync.
 
-[![npm version](https://img.shields.io/npm/v/openbot-lego?color=cb3837&style=flat-square&logo=npm)](https://www.npmjs.com/package/openbot-lego)
-[![node version](https://img.shields.io/node/v/openbot-lego?color=339933&style=flat-square&logo=node.js)](https://nodejs.org/)
-[![license](https://img.shields.io/github/license/RajaskaJanuardani/lego-openbot-agent?color=6366f1&style=flat-square)](./LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/RajaskaJanuardani/lego-openbot-agent?style=flat-square&logo=github)](https://github.com/RajaskaJanuardani/lego-openbot-agent)
+[![npm version](https://img.shields.io/npm/v/openbot-lego?color=cb3837&style=for-the-badge&logo=npm)](https://www.npmjs.com/package/openbot-lego)
+[![node version](https://img.shields.io/node/v/openbot-lego?color=339933&style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![license](https://img.shields.io/github/license/RajaskaJanuardani/lego-openbot-agent?color=8b5cf6&style=for-the-badge)](./LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/RajaskaJanuardani/lego-openbot-agent?style=for-the-badge&logo=github)](https://github.com/RajaskaJanuardani/lego-openbot-agent)
 
-[Quick Start](#quick-start) · [CLI Reference](#cli-reference) · [How It Works](#how-it-works) · [Features](#features) · [Development](#development)
+[**Quick Start**](#-quick-start) · [**Visual Tour**](#-visual-tour) · [**Interactive Shortcuts**](#-interactive-cli--tray) · [**Architecture**](#-live-sync-architecture) · [**Explore Rooms**](#-explore-the-house)
+
+<br />
+
+<img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/screenshots/overview-day.png" alt="LEGO OpenBot Agent 3D Overview" width="100%" />
 
 </div>
 
 ---
 
-## Overview
+## Visual Tour
 
-`openbot-lego` turns your local **OpenBot Desktop** workspace into a living 2-story LEGO diorama in the browser. Each OpenBot agent automatically spawns as a custom LEGO minifigure inside the house:
-
-- **Live presence & task state**: When an agent receives a prompt, runs a tool, or executes a scheduled routine, its minifigure immediately switches to **Working**, walks downstairs to an open computer desk in the **Floor 1 Studio**, and displays a concise task summary.
-- **Autonomous idle life**: When finished, agents return to **Idle** and roam across the house and beachfront — watching TV, grabbing cold drinks from the fridge, cooking, showering, sleeping, swinging in the hammock, swimming in the ocean, playing hopscotch, or chatting with one another.
-- **Zero manual setup**: No `.env` files, no manual bearer token configuration, and no second terminal required.
-
----
-
-## Prerequisites
-
-| Requirement | Version / Notes |
-| :--- | :--- |
-| **Node.js** | `>= 22.5.0` *(required for built-in `node:sqlite` read-only watcher)* |
-| **OpenBot Desktop** | Installed on Windows, macOS, or Linux |
-
-Verify your Node.js version:
-
-```bash
-node -v
-```
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/screenshots/floor1-studio.png" alt="Floor 1 Agent Studio" />
+      <p align="center"><strong>Floor 1 · Live Agent Studio</strong><br /><sub>Active agents walk downstairs to computer desks with real-time <code>Working</code> badges</sub></p>
+    </td>
+    <td width="50%">
+      <img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/screenshots/night-mode.png" alt="Night Mode Lighting" />
+      <p align="center"><strong>Day & Night Lighting</strong><br /><sub>Toggle warm interior pendant lamps, bedside lanterns, and ocean moonshine</sub></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/screenshots/build-mode.png" alt="Build Mode Editor" />
+      <p align="center"><strong>Interactive Build Mode</strong><br /><sub>Stud-snapping catalog, 24 LEGO colors, wall/floor painting, and JSON export</sub></p>
+    </td>
+    <td width="50%">
+      <img src="https://raw.githubusercontent.com/RajaskaJanuardani/lego-openbot-agent/main/assets/screenshots/overview-day.png" alt="Two-Story LEGO Cutaway" />
+      <p align="center"><strong>Two-Story Cutaway & Free Camera</strong><br /><sub>360° orbit, WASD pan, character follow-cam, and clickable live minimap</sub></p>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## Quick Start
 
-### Option 1 — Global CLI *(Recommended)*
-
-Install once globally and launch from any directory:
+> [!IMPORTANT]
+> Requires **Node.js `>= 22.5.0`** (uses built-in `node:sqlite` for zero-dependency read-only OpenBot sync) and **OpenBot Desktop** installed on Windows, macOS, or Linux.
 
 ```bash
 npm install -g openbot-lego
 openbot-lego
 ```
 
-### Option 2 — Run via `npx`
+Or launch immediately without global installation:
 
 ```bash
 npx openbot-lego
 ```
 
-Running `openbot-lego` automatically locates your local OpenBot SQLite database, starts the unified HTTP + SSE + 3D web server on `http://localhost:4310` (or the next free port), and opens your default browser.
+> [!TIP]
+> **Zero Configuration Required.** On startup, `openbot-lego` automatically discovers `openbot.db`, starts a unified HTTP + SSE + 3D server on `http://localhost:4310`, spawns a matching LEGO minifigure for every OpenBot agent, and opens your browser.
 
 ---
 
-## CLI Reference
+## Interactive CLI & Tray
 
-### Commands
+When you run `openbot-lego`, the terminal becomes an interactive control console with live status, OS startup integration, System Tray handoff, and one-key self-updates:
+
+```text
+    ███  ███     LEGO OpenBot Agent  v1.2.1
+  ▄██████████▄   Markas 3D Interaktif Real-Time untuk OpenBot Desktop
+  ████████████   ────────────────────────────────────────────────────
+  ████████████   Command: openbot-lego  ·  Tray / Auto-Start / Auto-Update
+  ▀██████████▀
+
+  ✔ Node.js       v24.15.0
+  ✔ OpenBot DB    Terdeteksi (4 agent aktif)
+  ✔ Auto-Start    Aktif saat laptop hidup
+  ✔ Markas 3D     http://localhost:4310
+
+  ➜ Membuka browser...
+  Pintasan:  [H] Hide to Tray (Background)  [A] Toggle Auto-Start  [O] Buka Web  [Q] Keluar
+```
+
+### Live Terminal Keycaps
+
+| Shortcut | Action |
+| :---: | :--- |
+| <kbd>H</kbd> | **Hide to Tray (Background)** — detaches server to background + launches System Tray icon *(Windows)* |
+| <kbd>A</kbd> | **Toggle Auto-Start** — enables/disables silent launch when your laptop boots |
+| <kbd>U</kbd> | **One-Key Self-Update** — appears automatically when a newer release hits npm |
+| <kbd>O</kbd> | Re-open `http://localhost:4310` in your default browser |
+| <kbd>Q</kbd> | Gracefully stop the server and exit (<kbd>Ctrl</kbd> + <kbd>C</kbd> also works) |
+
+<details>
+<summary><strong>Click to expand: Full CLI Commands & Flags Reference</strong></summary>
+
+#### Commands
 
 | Command | Description |
 | :--- | :--- |
-| `openbot-lego` | Start the server, sync OpenBot agents, and open the 3D web UI |
-| `openbot-lego start` | Explicit alias for the default launch command |
-| `openbot-lego background` | Run detached in the background with a System Tray icon *(Windows)* |
+| `openbot-lego` / `start` | Launch the 3D server, auto-sync OpenBot agents, and open browser |
+| `openbot-lego background` | Launch silently in background with System Tray icon |
 | `openbot-lego tray` | Alias for `openbot-lego background` |
-| `openbot-lego stop` | Stop the running background daemon and close its System Tray icon |
-| `openbot-lego autostart <on\|off\|status>` | Enable, disable, or inspect launch-at-login startup entry |
-| `openbot-lego status` | Print background daemon state and all detected OpenBot agents |
-| `openbot-lego doctor` | Run diagnostics (Node.js version, bundle, database path, auto-start) |
-| `openbot-lego update` | Self-update to the latest published version on npm |
-| `openbot-lego logs` | Print recent lines from the background daemon log |
-| `openbot-lego reset` | Clear local bridge configuration and cached state (`~/.openbot-lego`) |
+| `openbot-lego stop` | Gracefully stop background daemon and remove System Tray icon |
+| `openbot-lego autostart on` | Register hidden startup launcher on login (Windows / macOS / Linux) |
+| `openbot-lego autostart off` | Remove OS login startup entry |
+| `openbot-lego autostart status` | Inspect current startup registration and path |
+| `openbot-lego status` | Print background daemon status and live `WORKING` / `IDLE` agent table |
+| `openbot-lego doctor` | Check Node.js version, web bundle, `openbot.db`, and daemon health |
+| `openbot-lego update` | Self-update global `openbot-lego` installation from npm |
+| `openbot-lego logs` | View recent background daemon logs |
+| `openbot-lego reset` | Clear local CLI config and cached state (`~/.openbot-lego`) |
 
-### Flags
+#### Options
 
 | Flag | Default | Description |
 | :--- | :--- | :--- |
-| `-p, --port <port>` | `4310` | HTTP server bind port |
-| `--host <host>` | `127.0.0.1` | Host interface to bind |
-| `-d, --daemon, --tray` | `false` | Launch directly in background / System Tray mode |
-| `--no-open` | `false` | Start server without automatically opening a browser tab |
-| `-v, --version` | — | Print installed package version |
-| `-h, --help` | — | Print CLI usage help |
+| `-p`, `--port <port>` | `4310` | Custom HTTP server port |
+| `--host <host>` | `127.0.0.1` | Bind host address |
+| `-d`, `--daemon`, `--tray` | `false` | Start directly in background + System Tray mode |
+| `--no-open` | `false` | Do not open browser tab automatically |
+| `-v`, `--version` | — | Show CLI version |
+| `-h`, `--help` | — | Show help message |
 
-### Interactive Terminal Shortcuts
-
-While `openbot-lego` is running in an interactive terminal:
-
-| Key | Action |
-| :---: | :--- |
-| `H` | **Hide to Tray** — seamlessly hand off to background daemon + System Tray icon |
-| `A` | **Toggle Auto-Start** — enable or disable silent startup on OS login |
-| `U` | **One-Key Update** — update to the latest npm release when notified |
-| `O` | Open the 3D web UI in your browser |
-| `Q` | Stop the server and exit cleanly (`Ctrl+C` also supported) |
+</details>
 
 ---
 
-## How It Works
+## Live Sync Architecture
 
-```text
-┌────────────────────────┐     strict read-only     ┌──────────────────────────┐
-│    OpenBot Desktop     │ ───────────────────────▶ │   openbot-lego Bridge    │
-│      (openbot.db)      │      800ms SQLite poll   │   Hono HTTP + SSE Server │
-└────────────────────────┘                          └────────────┬─────────────┘
-                                                                 │ /api/events (SSE)
-                                                                 ▼
-┌────────────────────────┐                          ┌──────────────────────────┐
-│   3D LEGO Minifigures  │ ◀─────────────────────── │   React + R3F Frontend   │
-│  A* Pathfinding & AI   │    real-time state sync  │  Interactive Tropical HQ │
-└────────────────────────┘                          └──────────────────────────┘
+```mermaid
+flowchart LR
+    OB[("OpenBot Desktop\n(openbot.db)")] -->|"Strict read-only\n800ms WAL poll"| SYNC["Auto-Sync Watcher\n+ Secret Redaction"]
+    SYNC --> STORE["Bridge Store\n(~/.openbot-lego)"]
+    STORE -->|"SSE /api/events\n(< 1s latency)"| UI["React + Three.js 3D HQ"]
+    UI -->|"status = working"| STUDIO["Walk downstairs to\nFloor 1 Studio Desk"]
+    UI -->|"status = idle"| ROAM["Autonomous Life:\nTV, Pool/Sea, Cook, Sleep"]
 ```
 
-### Automatic OS Database Discovery
+> [!NOTE]
+> OpenBot's database is always opened with `{ readOnly: true }`. Secrets resembling bearer tokens or API keys are redacted automatically before ever reaching the browser UI.
 
-By default, the bridge watches `openbot.db` in **strict read-only** mode (WAL-safe, never writes to OpenBot's database):
+<details>
+<summary><strong>Click to expand: Default OpenBot DB Locations & Web Settings Panel</strong></summary>
 
-| Platform | Default Path |
+#### Auto-Detected OS Paths
+
+| OS | Default `openbot.db` Location |
 | :--- | :--- |
 | **Windows** | `%APPDATA%\OpenBot\openbot.db` |
 | **macOS** | `~/Library/Application Support/OpenBot/openbot.db` |
 | **Linux** | `~/.config/OpenBot/openbot.db` |
 
-### 1:1 Agent Lifecycle Sync
+#### In-Browser Controls (`Atur` Button)
 
-- **0 agents created**: The house starts clean with zero placeholder characters until you create an agent in OpenBot (or manually add a character via `+ Karakter Baru`).
-- **Agent added / deleted**: Creating or removing an agent in OpenBot Desktop automatically adds or removes its corresponding LEGO minifigure on the map in real time.
-- **Persistent per-agent customization**: Custom minifigure outfits edited in the Character Creator are remembered per `agentId`.
-- **Safe log & snippet handling**: Setup prompts are normalized cleanly, and strings matching common API key / bearer token patterns are automatically redacted before display.
+Everything can also be managed directly in the web HUD (top-left **`Atur`** button):
+- Toggle **Auto-Sync OpenBot Desktop** ON/OFF or point to a custom `openbot.db` file path
+- Toggle **Launch Automatically at Laptop Startup** right from the browser
+- Click **Test** on any agent to preview a 12-second `Working` cycle in the Studio
+- Click **Edit Outfit** to customize any agent's LEGO minifigure appearance (saved per `agentId`)
+- Perform a full factory reset via **Atur → Reset ke Awal** or by opening `http://localhost:4310/?reset=1`
 
----
-
-## Web UI Configuration
-
-Click **`Atur`** (or the status pill) in the top-left HUD to configure everything without touching config files or CLI flags:
-
-- **Auto-Sync Toggle & Custom DB Path**: Enable/disable SQLite polling, point to a non-default `openbot.db` file, or trigger an immediate rescan.
-- **Launch at System Startup**: Toggle OS auto-start directly from the browser.
-- **Per-Agent Controls**: Open the 3D **Edit Outfit** studio or trigger a 12-second **Test** working animation directly from the panel.
-- **Full Factory Reset**: Clear persisted outfits, room customizations, and local bridge config via **Atur → Reset ke Awal** or by visiting `http://localhost:4310/?reset=1`.
+</details>
 
 ---
 
-## Features
+## Explore the House
 
-- **Two-Story Cutaway Tropical House**:
-  - **Floor 1**: Foyer & Living Room (with animated LEGO TV), Agent Studio (6 computer workstations), Guest Bedroom, Mint Bathroom (walk-in glass shower), Laundry Room, 12-step precision wooden staircase, and Front Porch with Tuk-Tuk (`bajaj`).
-  - **Floor 2**: Kitchen (fridge, stove, sink, dining nook), Canopy Master Bedroom, Dressing Room (suspended hammock & vanity mirror), Living & Dining Area, Left Terrace (hopscotch), and Right Terrace.
-  - **Floor View Modes (`Semua` · `Lantai 2` · `Lantai 1`)**: Selecting `Lantai 1` cleanly hides Floor 2 geometry and raycasts so you can inspect and click directly inside the ground floor.
-- **Asset-Matched Character Animations & AI**:
-  - Multi-floor & outdoor **A\*** navigation graph with narrow-corridor/stair reservations and horizontal obstacle avoidance.
-  - Expressive animations for desk typing, sleeping (`Zzz…`), swinging in the hammock, watching TV with remote, drinking from the fridge, cooking with steam puffs, washing with soap bubbles, showering, hopscotch jumping, beach sunbathing, and freestyle ocean swimming.
-  - Multi-character speech bubbles aware of personality, room context, and recent agent tasks.
-- **Free Camera & Interactive Minimap**:
-  - `CameraControls` with 360° orbit, right-drag / `Shift+drag` / `WASD` / Arrow pan, `Q`/`E` rotation, double-click floor focus, **Ikuti Karakter** follow mode, room presets, and click-to-teleport **Minimap**.
-- **Modular Character Creator**: Customize skin tone, head shape/scale, canvas-rendered facial expressions, 10 hair styles, 7 headwear types, 10 torso styles with patterns, bottoms, footwear, body posture, and 6 accessory slots with a live 3D turntable.
-- **Build Mode (`Mode Bangun`)**: Recolor individual walls, top trims, and floors with a 24-color LEGO palette; place, rotate, move, or recolor 29+ catalog assets with stud-grid snapping and AABB collision detection; 60-step Undo/Redo; and Zod-validated JSON Export/Import.
+### Camera & Floor Navigation
 
----
+| Control | Action |
+| :--- | :--- |
+| **Left Drag** | 360° camera orbit |
+| **Right Drag** / <kbd>Shift</kbd> + **Drag** | Pan parallel to floor |
+| **Scroll** / **Pinch** | Zoom in and out |
+| <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> / **Arrows** | Glide camera target across rooms |
+| <kbd>Q</kbd> / <kbd>E</kbd> | Rotate camera horizontally |
+| **Double-Click Floor** | Smooth focus onto clicked tile or ground point |
+| <kbd>G</kbd> | Toggle multi-floor A\* navigation graph debug overlay |
 
-## Advanced: External Webhook API
+<details>
+<summary><strong>Click to expand: Rooms Across Floor 1, Floor 2 & Beachfront</strong></summary>
 
-For external scripts or remote agents that want to push status updates explicitly alongside or instead of SQLite sync, the bridge exposes authenticated REST endpoints (view/copy your generated Bearer token under **Atur → Opsi Lanjutan**):
+| Zone | Rooms & Interactive Highlights |
+| :--- | :--- |
+| **Floor 1** *(Interior)* | **Agent Studio** (6 computer workstations, sticky-note whiteboard, bookshelf, wall clock) · **Foyer & Living Room** (animated LEGO TV, rattan sofa) · **Guest Room** (single bed, wardrobe) · **Mint Bathroom** (walk-in glass shower, vanity sink) · **Laundry Room** (front-loading washer, drying rack) · **12-Step Staircase Hall** · **Front Porch** |
+| **Floor 2** *(Cutaway)* | **Kitchen** (silver fridge, stove with frying pan, sink, breakfast table) · **Master Bedroom** (4-poster wooden canopy bed, warm bedside lanterns) · **Dressing Room** (suspended white fabric hammock, carved vanity mirror) · **Living & Dining Area** · **Left Terrace** (1–10 hopscotch grid, AC unit) · **Right Terrace** |
+| **Outdoors** | **Sandy Beachfront** · **Animated Blue Ocean** (buoy, swim zone) · **Blue Beach Lounge Chair & Umbrella** · **Yellow Tuk-Tuk (Bajaj)** · **Coconut Palms & Garden Paths** |
 
-- `GET /api/health` — Bridge health, active mode, and sync diagnostics
-- `GET /api/agents` — Current agent snapshot
-- `GET /api/events` — Real-time Server-Sent Events (`snapshot`, `agents`, `ping`)
-- `POST /api/agents/register` — Register or update agent metadata *(Bearer auth)*
-- `POST /api/agents/:agentId/status` — Update `working` / `idle` state and task text *(Bearer auth)*
-- `POST /api/agents/:agentId/heartbeat` — Refresh timeout timestamp for long tasks *(Bearer auth)*
+> Selecting **Lantai 1** in the top bar hides Floor 2 cleanly and disables Floor 2 raycasts so you can click directly inside ground-floor rooms.
+
+</details>
+
+<details>
+<summary><strong>Click to expand: 16 Asset-Matched Agent Animations & Customization</strong></summary>
+
+- **Working (`working`)**: Strictly active while the linked OpenBot agent is processing a message or routine — seated typing at a Floor 1 Studio workstation.
+- **Idle Lifestyle (`idle`)**:
+  - **Drinking** from the kitchen silver fridge (holding cold cyan cup + straw)
+  - **Cooking** over the kitchen stove (holding spatula + rising steam puffs)
+  - **Washing** dishes at the kitchen sink or laundry washer (soap bubbles)
+  - **Watching TV** on Floor 1 sofa/armchair (clicking LEGO TV remote)
+  - **Showering** inside Floor 1 glass shower (falling water droplets + bubbles)
+  - **Sleeping** horizontally on Floor 1/2 beds with floating `Zzz…` indicator
+  - **Swinging** reclined in the Floor 2 white fabric hammock
+  - **Swimming** freestyle in the ocean waves (windmill arms, flutter kicks, splash droplets)
+  - **Sunbathing** reclined on the beach lounge chair
+  - **Hopscotch** hopping on Left Terrace · **Vanity Mirror** styling · **Multi-Agent Indonesian Chat**
+- **Modular Character Creator**: Customize skin tone, head shape/scale, canvas-rendered faces, 10 hairstyles, 7 headwear pieces, 10 torso designs + patterns, bottoms, footwear, height/build, and 6 accessory slots with live 3D turntable preview.
+- **Interactive Build Mode**: 24 LEGO colors, wall/trim/floor recoloring, 29+ catalog items with stud-grid snapping and AABB collision check, 60-step Undo/Redo (<kbd>Ctrl</kbd>+<kbd>Z</kbd>), and Zod-validated JSON Export/Import.
+
+</details>
+
+<details>
+<summary><strong>Click to expand: Optional External Webhook REST & SSE API</strong></summary>
+
+External scripts or remote workers can push presence updates using the Bearer token shown under **Atur → Opsi Lanjutan**:
+
+| Endpoint | Method | Auth | Purpose |
+| :--- | :---: | :---: | :--- |
+| `/api/health` | `GET` | — | Bridge status, mode, and SQLite diagnostics |
+| `/api/agents` | `GET` | — | List all active agents |
+| `/api/events` | `GET` | — | Real-time Server-Sent Events stream (`snapshot`, `agents`, `ping`) |
+| `/api/agents/register` | `POST` | Bearer | Register or update an external agent profile |
+| `/api/agents/:agentId/status` | `POST` | Bearer | Push `working` / `idle` state with 1-sentence task summary |
+| `/api/agents/:agentId/heartbeat` | `POST` | Bearer | Extend active timeout for long-running tasks |
+
+</details>
 
 ---
 
 ## Development
+
+<details>
+<summary><strong>Click to expand: Run from Source, Build Scripts & Troubleshooting</strong></summary>
 
 ```bash
 git clone https://github.com/RajaskaJanuardani/lego-openbot-agent.git
@@ -192,26 +251,24 @@ npm install
 npm run dev
 ```
 
-During development, Vite embeds the OpenBot Bridge middleware directly (`bridge/vitePlugin.ts`), so `npm run dev` serves both the frontend and `/api/*` endpoints on `http://localhost:5173`.
-
-### Useful Scripts
+During development, Vite embeds the OpenBot Bridge middleware directly (`bridge/vitePlugin.ts`), serving both the React Three Fiber UI and `/api/*` on `http://localhost:5173`.
 
 | Script | Purpose |
 | :--- | :--- |
 | `npm run dev` | Start Vite dev server with embedded OpenBot Bridge (`:5173`) |
-| `npm run build` | Type-check (`tsc -b`), bundle web assets (`dist/`), and build CLI (`dist-cli/cli.mjs`) |
-| `npm run build:cli` | Rebuild CLI executable only |
-| `npm run preview` | Preview production build with embedded Bridge |
+| `npm run build` | Type-check (`tsc -b`), bundle web UI (`dist/`), and compile CLI (`dist-cli/cli.mjs`) |
+| `npm run build:cli` | Rebuild CLI executable bundle only |
+| `npm run preview` | Serve production build locally with embedded Bridge |
 | `npm run bridge` | Run standalone Bridge server (`:4310`) |
-| `npm run simulate-agent` | Run local multi-agent status simulator script |
+| `npm run simulate-agent` | Simulate 3 sample agents cycling `working` / `idle` states |
 
----
+#### Troubleshooting
 
-## Troubleshooting
+- **0 agents appear on launch**: Open **Atur** in the top-left HUD to inspect the detected `openbot.db` path or paste a custom path manually.
+- **SQLite error on startup**: Ensure `node -v` outputs **`v22.5.0`** or higher.
+- **Need a clean slate?** Run `openbot-lego reset` in your terminal or open `http://localhost:4310/?reset=1`.
 
-- **OpenBot Desktop is installed, but `0 agents` appear**: Open **Atur** in the top-left HUD and verify the resolved `openbot.db` path, or paste the exact path to your `openbot.db` file and click **Simpan**.
-- **Auto-Sync reports SQLite unsupported**: Upgrade Node.js to **`>= 22.5.0`** (Node 22 LTS or Node 24+ recommended).
-- **Reset local CLI or web configuration**: Run `openbot-lego reset` in your terminal or open `http://localhost:4310/?reset=1` in your browser.
+</details>
 
 ---
 
