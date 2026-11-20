@@ -31,7 +31,7 @@ interface SyncDiagnostics {
 }
 
 interface BridgeConfigResponse {
-  mode: 'embedded' | 'standalone';
+  mode: 'embedded' | 'standalone' | 'cli';
   autoSyncEnabled: boolean;
   openbotDbPath: string;
   defaultOpenBotDbPath: string;
@@ -245,7 +245,13 @@ export const OpenBotSettingsModal: React.FC = () => {
               <div className="text-xs">
                 <p className="font-extrabold text-slate-800">
                   {connectionState === 'connected'
-                    ? `Bridge Aktif (${config?.mode === 'embedded' ? 'Terintegrasi di Vite' : 'Standalone'})`
+                    ? `Bridge Aktif (${
+                        config?.mode === 'cli'
+                          ? 'CLI openbot-lego'
+                          : config?.mode === 'embedded'
+                            ? 'Terintegrasi di Vite'
+                            : 'Standalone'
+                      })`
                     : 'Bridge Offline'}
                 </p>
                 <p className="text-[11px] text-slate-500">

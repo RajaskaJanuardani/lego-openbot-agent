@@ -1,4 +1,4 @@
-# LEGO OpenBot Agent
+# LEGO OpenBot Agent (`openbot-lego`)
 
 Markas & diorama rumah tropis 2 lantai bergaya **LEGO 3D** untuk memantau dan menghidupkan agent **OpenBot Desktop** secara real-time di browser.
 
@@ -8,8 +8,7 @@ Dibangun dengan **React + TypeScript + Vite + Three.js (`@react-three/fiber`, `@
 
 ## Prasyarat
 
-1. **Node.js `>= 22.5.0`** *(diperlukan untuk dukungan bawaan `node:sqlite` agar Auto-Sync OpenBot berjalan otomatis tanpa instalasi driver tambahan)*.
-   Cek versi Node Anda:
+1. **Node.js `>= 22.5.0`** *(diperlukan untuk dukungan bawaan `node:sqlite` agar Auto-Sync OpenBot berjalan otomatis)*.
    ```bash
    node -v
    ```
@@ -17,52 +16,64 @@ Dibangun dengan **React + TypeScript + Vite + Three.js (`@react-three/fiber`, `@
 
 ---
 
-## Cara Install & Menjalankan
+## Cara Install & Menjalankan (CLI)
 
-Cukup **1 perintah** — Bridge & Auto-Sync OpenBot sudah tertanam langsung di dev server Vite (tidak perlu `.env`, tidak perlu token, dan tidak perlu terminal kedua):
+### Cara 1 — Install Global *(Rekomendasi)*
+Install sekali saja, lalu jalankan dari terminal mana pun cukup 1 perintah:
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/RajaskaJanuardani/lego-openbot-agent.git
-cd lego-openbot-agent
-
-# 2. Install dependencies
-npm install
-
-# 3. Jalankan aplikasi
-npm run dev
+npm install -g openbot-lego
+openbot-lego
 ```
 
-Setelah itu buka **`http://localhost:5173`** di browser.
+### Cara 2 — Langsung Jalan Tanpa Install (`npx`)
+```bash
+npx openbot-lego
+```
+
+> Begitu dijalankan, `openbot-lego` otomatis mendeteksi database lokal **OpenBot Desktop** (read-only), menjalankan server lokal, dan langsung membuka browser ke **`http://localhost:4310`**.
+
+---
+
+## Perintah CLI
+
+```bash
+openbot-lego                  # Jalankan Markas 3D & otomatis buka browser
+openbot-lego --port 8080      # Jalankan di port custom
+openbot-lego --no-open        # Jalankan tanpa membuka browser otomatis
+openbot-lego status           # Lihat daftar agent OpenBot & status (Working/Idle) di terminal
+openbot-lego doctor           # Cek versi Node.js & koneksi openbot.db
+openbot-lego reset            # Reset konfigurasi & cache lokal (~/.openbot-lego)
+openbot-lego --help           # Tampilkan bantuan lengkap
+```
 
 ---
 
 ## Cara Kerja Otomatis (Zero-Config)
 
-Begitu `http://localhost:5173` terbuka:
-- **Deteksi Otomatis (`read-only`)**: Bridge mencari database lokal OpenBot (`openbot.db`) sesuai OS Anda:
+- **Deteksi Otomatis (`read-only`)**: mencari `openbot.db` sesuai OS Anda:
   - **Windows**: `%APPDATA%\OpenBot\openbot.db`
   - **macOS**: `~/Library/Application Support/OpenBot/openbot.db`
   - **Linux**: `~/.config/OpenBot/openbot.db`
 - **Sinkronisasi 1:1 Otomatis**:
-  - Setiap agent yang Anda miliki di OpenBot Desktop **langsung muncul otomatis** sebagai karakter minifigure LEGO di dalam rumah 3D.
-  - Membuat agent baru di OpenBot Desktop → karakter LEGO baru otomatis masuk ke rumah.
+  - Setiap agent yang Anda miliki di OpenBot Desktop **langsung muncul otomatis** sebagai minifigure LEGO di dalam rumah 3D.
+  - Membuat agent baru di OpenBot Desktop → minifigure baru otomatis masuk ke rumah.
   - Menghapus agent di OpenBot Desktop → karakter otomatis keluar dari map.
   - Jika belum memiliki agent (`0` agent), rumah mulai dalam keadaan kosong sampai Anda membuat agent di OpenBot (atau menambah karakter manual via `+ Karakter Baru`).
 - **Status Real-Time (`Working` / `Idle`)**:
-  - Saat Anda mengirim pesan ke agent di OpenBot (atau routine berjalan), dalam `< 1 detik` karakter LEGO-nya berubah ke status **`Working`**, berjalan turun ke **Lantai 1 · Ruang Kerja**, duduk di meja komputer, dan mengetik sambil menampilkan potongan task.
+  - Saat agent memproses pesan / menjalankan *tool* / *routine*, dalam `< 1 detik` karakter LEGO-nya berubah ke **`Working`**, berjalan turun ke **Lantai 1 · Ruang Kerja**, duduk di meja komputer, dan mengetik sambil menampilkan potongan task.
   - Selesai membalas → karakter kembali **`Idle`** dan beraktivitas bebas di seluruh rumah & pantai.
 
 ---
 
 ## Konfigurasi Lewat Web
 
-Klik pill **`OpenBot: Terhubung`** atau tombol **`Atur`** di pojok kiri atas untuk mengatur semuanya langsung dari browser:
+Klik pill **`OpenBot: Terhubung`** atau tombol **`Atur`** di pojok kiri atas untuk mengatur semuanya dari browser:
 - **Toggle Auto-Sync OpenBot Desktop** (ON/OFF) & tombol **Sync**.
-- **Lokasi `openbot.db` custom** *(opsional, jika folder data OpenBot Anda berada di lokasi berbeda)*.
-- **Edit Outfit** per agent (kustomisasi minifigure LEGO tersimpan otomatis di browser).
-- **Tombol `Test` / `Idle`** per agent untuk menguji animasi kerja ke Ruang Kerja Lantai 1 secara instan.
-- **Reset ke Awal** untuk mengembalikan semua pengaturan, outfit kustom, dan dekorasi ke kondisi awal.
+- **Lokasi `openbot.db` custom** *(opsional, jika folder data OpenBot berada di lokasi berbeda)*.
+- **Edit Outfit** per agent (kustomisasi minifigure LEGO tersimpan otomatis).
+- **Tombol `Test` / `Idle`** per agent untuk tes animasi kerja ke Ruang Kerja Lantai 1 secara instan.
+- **Reset ke Awal** untuk mengembalikan semua pengaturan, outfit kustom, dan dekorasi ke awal.
 
 ---
 
@@ -71,39 +82,31 @@ Klik pill **`OpenBot: Terhubung`** atau tombol **`Atur`** di pojok kiri atas unt
 - **Rumah Tropis LEGO 2 Lantai + Mode Lantai**:
   - **Lantai 1**: Ruang Tamu (dengan TV animasi), Ruang Kerja Agent (6 meja komputer), Kamar Tamu, Kamar Mandi (shower kaca), Laundry, Lorong Tangga kayu 12 anak tangga, dan Teras Depan.
   - **Lantai 2**: Dapur, Kamar Tidur Kanopi, Kamar Rias (hammock & meja rias), Ruang Keluarga, Area Makan, Teras Kiri (engklek), dan Teras Kanan.
-  - Mode **Lantai 1** menyembunyikan Lantai 2 penuh agar interior Lantai 1 terlihat jernih dan bisa langsung diklik.
+  - Mode **Lantai 1** menyembunyikan Lantai 2 penuh agar interior Lantai 1 jernih dan bisa langsung diklik.
 - **Animasi Hidup Sesuai Aset + Obrolan AI**:
   - Pathfinding **A\*** multi-lantai & outdoor, ngobrol antar karakter, ambil minum di kulkas, masak di kompor, cuci piring/laundry, tidur di kasur (`Zzz…`), tiduran di hammock, nonton TV pakai remote, mandi shower, main engklek, bercermin, berjemur, dan berenang gaya bebas di laut.
 - **Kamera Bebas & Minimap Interaktif**:
   - Drag kiri: putar 360° · Drag kanan / Shift+drag / `WASD` / panah: geser · `Q`/`E`: rotasi · Double-click lantai: fokus · Mode **Ikuti Karakter** · **Minimap** klik-untuk-pindah.
-- **Character Creator**: Kustomisasi kepala, wajah, rambut, topi, baju, motif, bawahan, sepatu, postur, dan 6 slot aksesoris dengan preview 3D turntable (hingga 12 karakter).
-- **Mode Bangun**: Ubah warna dinding & lantai (24 warna LEGO), katalog 29+ aset dekorasi snap grid + cek tabrakan AABB, Undo/Redo, Export/Import JSON.
+- **Character Creator & Mode Bangun**: Kustomisasi minifigure modular dengan preview 3D (hingga 12 karakter) serta Mode Bangun dengan 24 warna LEGO, 29+ aset dekorasi snap grid, Undo/Redo, dan Export/Import JSON.
 
 ---
 
-## Troubleshooting
-
-- **Status `OpenBot: 0 Agent` atau `openbot.db` tidak ditemukan**:
-  1. Pastikan OpenBot Desktop sudah terpasang dan minimal pernah dibuka sekali.
-  2. Klik tombol **`Atur`** di kiri atas, lalu isi path lengkap file `openbot.db` Anda dan klik **Simpan**.
-- **Auto-Sync tidak jalan (`node:sqlite` tidak tersedia)**:
-  Pastikan versi Node.js Anda minimal **`v22.5.0`** (disarankan Node.js 22 LTS / 24+).
-
----
-
-## Opsi Lanjutan (Standalone Bridge / Build Production)
+## Development (Dari Source)
 
 ```bash
-# Build production (TypeScript check + Vite bundle)
+git clone https://github.com/RajaskaJanuardani/lego-openbot-agent.git
+cd lego-openbot-agent
+npm install
+npm run dev
+```
+
+Build production + CLI executable:
+```bash
 npm run build
-
-# Preview hasil build (embedded bridge juga ikut aktif)
-npm run preview
 ```
 
-Jika ingin menjalankan Bridge secara terpisah di port `4310` (misalnya untuk integrasi webhook eksternal):
+---
 
-```bash
-BRIDGE_TOKEN="ganti-dengan-token-anda" npm run bridge
-VITE_BRIDGE_URL="http://localhost:4310" npm run dev
-```
+## Lisensi
+
+[MIT](./LICENSE)

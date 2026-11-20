@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
 
 export interface BridgeConfig {
   autoSyncEnabled: boolean;
@@ -11,7 +11,14 @@ export interface BridgeConfig {
   bridgeToken: string;
 }
 
-const CONFIG_FILE = resolve(process.cwd(), 'bridge/data/config.json');
+export function getDataDir(): string {
+  if (process.env.OPENBOT_LEGO_DATA_DIR?.trim()) {
+    return process.env.OPENBOT_LEGO_DATA_DIR.trim();
+  }
+  return join(homedir(), '.openbot-lego');
+}
+
+const CONFIG_FILE = join(getDataDir(), 'config.json');
 
 export function getDefaultOpenBotDbPath(): string {
   if (process.env.OPENBOT_DB_PATH) {

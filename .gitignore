@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-cli/
 bridge/data/
 .env
 .env.*

@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
+import { getDataDir } from './config.js';
 
 export interface BridgeAgentRecord {
   agentId: string;
@@ -14,7 +15,7 @@ export interface BridgeAgentRecord {
   lastHeartbeatAt: string;
 }
 
-const DATA_FILE = resolve(process.cwd(), 'bridge/data/agents.json');
+const DATA_FILE = join(getDataDir(), 'agents.json');
 const STALE_MS = 20 * 60 * 1000; // 20 minutes stale working timeout
 
 type Listener = (agents: BridgeAgentRecord[]) => void;

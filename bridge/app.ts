@@ -3,17 +3,23 @@ import { cors } from 'hono/cors';
 import { streamSSE } from 'hono/streaming';
 import { z } from 'zod';
 import { BridgeConfigStore, getDefaultOpenBotDbPath } from './config.js';
-import { startOpenBotSync, type OpenBotSyncHandle } from './openbotSync.js';
+import {
+  startOpenBotSync,
+  type OpenBotSyncDiagnostics,
+  type OpenBotSyncHandle,
+} from './openbotSync.js';
 import { AgentBridgeStore } from './store.js';
 
 export interface BridgeRuntimeOptions {
-  mode: 'embedded' | 'standalone';
+  mode: 'embedded' | 'standalone' | 'cli';
   allowedOrigin?: string;
 }
 
 export interface BridgeRuntime {
   app: Hono;
   store: AgentBridgeStore;
+  ready: Promise<void>;
+  getDiagnostics: () => OpenBotSyncDiagnostics | null;
   stop: () => void;
 }
 
@@ -58,7 +64,7 @@ export function createBridgeRuntime(options: BridgeRuntimeOptions): BridgeRuntim
   let openBotSync: OpenBotSyncHandle | null = null;
   const simulateTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
-  void startOpenBotSync(store, () => configStore.get()).then((handle) => {
+  const ready = startOpenBotSync(store, () => configStore.get()).then((handle) => {
     openBotSync = handle;
   });
 
@@ -338,6 +344,8 @@ export function createBridgeRuntime(options: BridgeRuntimeOptions): BridgeRuntim
   return {
     app,
     store,
+    ready,
+    getDiagnostics: () => openBotSync?.getDiagnostics() ?? null,
     stop: () => {
       clearInterval(staleTimer);
       simulateTimers.forEach((t) => clearTimeout(t));
