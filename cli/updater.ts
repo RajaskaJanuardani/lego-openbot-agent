@@ -62,9 +62,13 @@ export async function checkForUpdate(
  */
 export function runGlobalSelfUpdate(): boolean {
   const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  const result = spawnSync(npmCmd, ['install', '-g', 'openbot-lego@latest'], {
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-  });
+  const result = spawnSync(
+    npmCmd,
+    ['install', '-g', 'openbot-lego@latest', '--prefer-online'],
+    {
+      stdio: 'inherit',
+      shell: process.platform === 'win32',
+    }
+  );
   return result.status === 0;
 }

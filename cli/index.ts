@@ -83,7 +83,7 @@ function printBanner(version: string): void {
     `  ${C.pink}▄██████████▄${C.reset}  `,
     `  ${C.violet}████${C.eye}█${C.violet}██${C.eye}█${C.violet}████${C.reset}  `,
     `  ${C.indigo}████${C.eye}█${C.indigo}██${C.eye}█${C.indigo}████${C.reset}  `,
-    `  ${C.indigo}▀█████████${C.redBadge}3D${C.reset}  `,
+    `  ${C.indigo}▀██████████▀${C.reset}  `,
   ];
 
   console.log('');
